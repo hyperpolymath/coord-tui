@@ -1,0 +1,84 @@
+// SPDX-License-Identifier: PMPL-1.0-or-later
+// Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+= coord-tui Roadmap
+:toc:
+:toc-placement: preamble
+
+Roadmap for `coord-tui` — the terminal UI companion for BoJ `local-coord-mcp`.
+
+== Current: v0.1 — Core coordination dashboard ✓
+
+Everything working today:
+
+* [x] Interactive TUI with Peers and Claims panels (ratatui + crossterm)
+* [x] `--id` silent registration mode for shell hooks
+* [x] Window title set to peer ID on both interactive and silent modes
+* [x] `coord_list_claims` endpoint + claims panel populated correctly
+* [x] Commands sidebar (right panel, open by default, `\` to toggle)
+* [x] `?` full help overlay (keys, shell helpers, session info)
+* [x] `coord-hooks.sh` — `coord-peers` / `coord-claims` / `coord-claim` / `coord-status` / `coord-whoami`
+* [x] Tool launcher wrappers: `claude` / `gemini` / `cursor` / `codex` / `vibe`
+* [x] `just coord-*` recipes in boj-server Justfile
+* [x] `install.sh` — one-command new-machine setup
+* [x] Idris2 `IsLoopback` proof in adapter ABI
+* [x] Auto-refresh every 5 s; footer shows refresh age
+
+== v0.2 — Sidebar improvements + claim lifecycle
+
+_Goal: make the sidebar more ergonomic; complete the claim lifecycle._
+
+* [ ] Scrollable sidebar content (currently clips at terminal bottom)
+* [ ] Per-section collapse/expand in the sidebar (`1`–`4` to toggle sections)
+* [ ] Explicit claim release — `r` to release your selected claim
+* [ ] Claim expiry countdown in the Claims panel (watchdog TTL remaining)
+* [ ] Peer detail view — press Enter on a peer to expand role, variant, capabilities
+* [ ] `coord-hooks.sh` completion: tab-complete task names from live claim list
+* [ ] `just coord-release` recipe
+
+== v0.3 — Polish and install UX
+
+_Goal: zero-friction onboarding for new contributors._
+
+* [ ] Colour-coded peer kinds (claude = cyan, gemini = blue, cursor = yellow, vibe = magenta)
+* [ ] Status line shows claim count + peer count without opening TUI
+* [ ] `install.sh` idempotent dry-run mode (`--check`)
+* [ ] `install.sh` Homebrew / standalone `.tar.gz` distribution
+* [ ] Configurable refresh interval via `--refresh-secs`
+* [ ] `COORD_ADAPTER_TIMEOUT_MS` env var for slow machines
+* [ ] Man page (generated via `just coord-man`)
+* [ ] Better error message when adapter is not running (link to install docs)
+
+== v0.4 — Formal verification
+
+_Goal: verify state transitions prove isolation and liveness._
+
+* [ ] Extract state machine to `src/state.rs` (pure, no I/O)
+* [ ] Idris2 ABI in `abi/CoordTUI.idr` — formal spec of `Mode`, `Focus`, `App` transitions
+* [ ] Proof obligations:
+** `P-01` Mode transitions are acyclic (no infinite mode loops without user input)
+** `P-02` Selection always in bounds (`clamp_selection` proven correct)
+** `P-03` Sidebar does not affect peer/claim data (purely presentational)
+* [ ] Zig FFI for state helpers (replaces pure-Rust `next_index` etc.)
+* [ ] SPARK/Ada companion module for the transition kernel
+
+== v0.5 — Multi-machine support
+
+_Goal: coordinate across machines on the same LAN, not just localhost._
+
+* [ ] Configurable adapter URL (already `COORD_BACKEND_URL`; needs secure transport)
+* [ ] mTLS between coord-tui and non-local adapters
+* [ ] Peer federation: list peers from multiple coord adapters in one TUI view
+* [ ] `coord-hooks.sh` SSH forwarding helper (`coord-tunnel <host>`)
+
+== Out of scope
+
+Things that belong in `local-coord-mcp` (the cartridge), not coord-tui:
+
+* Claim persistence across adapter restarts
+* Master/journeyman/apprentice role promotion
+* Track-record affinity scoring
+* Envelope routing and typed messages
+* Watchdog TTL policy
+
+These are adapter and MCP bridge concerns — coord-tui is intentionally a
+read/act client, not a policy engine.

@@ -1,0 +1,74 @@
+// SPDX-License-Identifier: PMPL-1.0-or-later
+// Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+= coord-tui
+:toc:
+:toc-placement: preamble
+
+Rapid-setup terminal UI for BoJ `local-coord-mcp` — the multi-instance AI
+coordination cartridge.
+
+== What is this?
+
+When you have multiple AI tool windows open at once (several Claude windows,
+Gemini, Cursor, Codex), they work independently and can accidentally duplicate
+work or create conflicts. `local-coord-mcp` is the BoJ cartridge that lets
+them find each other and coordinate. `coord-tui` is the human interface that
+makes this practical.
+
+== What problem does it solve?
+
+Without coordination, four Claude windows working on the same codebase will
+all try to fix the same bug, all try to update the same file, all try to
+write the same test. With coordination, one instance claims a task and the
+others see that it is taken.
+
+`coord-tui` solves two problems:
+
+1. **Visibility** — each terminal window shows its unique peer ID in the title
+   bar (`claude [peer-a1b2c3]`) so you can find any instance at a glance.
+2. **Setup** — one script installs everything and wires the shell hooks so
+   the above happens automatically every time you open `claude` or `gemini`.
+
+== How does it work?
+
+A BoJ cartridge (`local-coord-mcp`) runs a small HTTP server on
+`127.0.0.1:7745`. When any AI tool starts, it registers as a peer and gets
+a session token. The MCP bridge (`mcp-bridge/main.js`) is already wired to
+this server and exposes 20+ `coord_*` tools to Claude.
+
+`coord-tui` is a Rust binary that talks to the same server. It has two modes:
+
+* **Interactive** (`coord-tui`): real-time view of all peers and task claims
+  with keyboard actions.
+* **Silent** (`coord-tui --id --kind claude`): registers, writes
+  `~/.cache/coord-tui/peer.env`, prints the peer ID, exits. Used by the
+  shell hooks.
+
+== Who should use this?
+
+Anyone running multiple AI coding sessions at once and wanting them to work
+together rather than fight over the same files.
+
+== Relationship to local-coord-mcp
+
+`coord-tui` is a standalone client. The canonical coord logic lives in
+`boj-server/cartridges/local-coord-mcp/`. This tool adds:
+
+* A human TUI for monitoring
+* `--id` silent mode for shell-hook use
+* `shell/coord-hooks.sh` — shell function wrappers that auto-register and set
+  the window title
+* `install.sh` — cross-machine setup automation
+
+== Where does it live in the repo?
+
+```
+boj-server/
+└── coord-tui/
+    ├── Cargo.toml
+    ├── install.sh          # one-command setup for a new machine
+    ├── shell/
+    │   └── coord-hooks.sh  # source from .bashrc / .zshrc
+    └── src/
+        └── main.rs
+```

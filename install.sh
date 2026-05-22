@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# SPDX-License-Identifier: PMPL-1.0-or-later
+# SPDX-License-Identifier: MPL-2.0
 # Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
 #
 # coord-tui installer — sets up BoJ local-coord-mcp + coord-tui on a new machine.
@@ -103,7 +103,7 @@ fi
 say "Installing systemd user service…"
 mkdir -p "$SYSTEMD_DIR"
 cat > "$SERVICE_FILE" <<EOF
-# SPDX-License-Identifier: PMPL-1.0-or-later
+# SPDX-License-Identifier: MPL-2.0
 [Unit]
 Description=BoJ local-coord-mcp adapter (AI multi-instance coordination)
 After=network.target

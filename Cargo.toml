@@ -1,5 +1,5 @@
-# SPDX-License-Identifier: PMPL-1.0-or-later
-# (MPL-2.0 required for crates.io; PMPL-1.0-or-later preferred)
+# SPDX-License-Identifier: MPL-2.0
+# (MPL-2.0 required for crates.io; MPL-2.0 preferred)
 [package]
 name = "coord-tui"
 version = "0.1.0"

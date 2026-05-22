@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: PMPL-1.0-or-later
+# SPDX-License-Identifier: MPL-2.0
 # Dependabot configuration — adopts the corrected RSR template approach
 # (open-pull-requests-limit: 10 on cargo, grouped minor/patch).
 

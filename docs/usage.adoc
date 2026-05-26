@@ -1,0 +1,81 @@
+// SPDX-License-Identifier: MPL-2.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell (hyperpolymath) <6759885+hyperpolymath@users.noreply.github.com>
+= Usage — coord-tui
+:revdate: 2026-MM-DD
+
+== Audience
+
+This document is for *consumers* of `coord-tui` — people who depend
+on it, call it, or include it. For developers working *on* it, see
+link:./contributing.adoc[contributing.adoc].
+
+== Quickstart
+
+The shortest path from zero to a working call:
+
+[source,bash]
+----
+# 1. Install
+just install                # or: cargo install --path . / deno task install
+
+# 2. Configure
+cp examples/config.example.toml ./config.toml
+# Edit minimal required fields.
+
+# 3. Run
+just run                    # or the equivalent for your language
+----
+
+Expected output:
+
+[source]
+----
+coord-tui v0.0.0
+Listening on 127.0.0.1:8080
+----
+
+== Common use cases
+
+For each canonical use case, give:
+
+. A one-line statement of the goal.
+. The minimal invocation.
+. Expected output / side effect.
+
+=== Use case 1: <short title>
+
+(Replace with real content.)
+
+=== Use case 2: <short title>
+
+== Configuration reference
+
+Document every configurable field. Keep this section authoritative — if
+the code grows a new option, this table must grow too (CI can be wired
+to enforce this).
+
+[cols="1,1,1,3", options="header"]
+|===
+| Field | Type | Default | Meaning
+
+| `<key>` | `<type>` | `<default>` | <what it does>
+|===
+
+== Stability guarantees
+
+Be explicit:
+
+* **Stable**: API surfaces that follow SemVer (breaking change = major bump).
+* **Unstable**: behind a flag / pre-1.0 / explicitly marked.
+* **Internal**: documented for reference but no compatibility promise.
+
+== Limits & known constraints
+
+* Maximum supported `<X>`: `<value>`.
+* `<Y>` is not yet implemented; track at issue `#<n>`.
+* On `<platform>`, `<Z>` behaves differently because `<reason>`.
+
+== See also
+
+* link:./architecture.adoc[Architecture] — how it works internally.
+* link:./troubleshooting.adoc[Troubleshooting] — when things go wrong.

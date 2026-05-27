@@ -1,0 +1,78 @@
+// SPDX-License-Identifier: MPL-2.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell (hyperpolymath) <6759885+hyperpolymath@users.noreply.github.com>
+= Architecture — coord-tui
+:revdate: 2026-MM-DD
+
+== System overview
+
+One paragraph: what this project does and what it does not do. State the
+*invariant* — the property that, if violated, would make the whole project
+pointless. Future maintainers will read this paragraph first.
+
+== Component diagram
+
+Replace this section with an ASCII or Mermaid diagram. Keep it under 20
+lines — anything bigger belongs in `architecture/`.
+
+[source]
+----
++------------------+      +------------------+
+|   Component A    | ---> |   Component B    |
++------------------+      +------------------+
+         |
+         v
++------------------+
+|   Component C    |
++------------------+
+----
+
+== Data flow
+
+For each external input, describe:
+
+* **Source**: where it comes from.
+* **Validation**: what guarantees we enforce on entry.
+* **Transformation**: high-level processing stages.
+* **Sink**: where the result goes.
+
+== Key invariants
+
+Enumerate the load-bearing invariants of the system. Each should have:
+
+. A one-line statement.
+. The code location(s) that enforce it.
+. The failure mode if the invariant is violated.
+
+Example:
+
+[cols="1,2,2,2", options="header"]
+|===
+| # | Invariant | Enforced at | Failure mode
+
+| 1
+| All HTTP requests carry a valid `X-Request-ID`.
+| `src/middleware/request_id.rs`
+| Logs become unjoinable; correlation breaks.
+
+| 2
+| The output buffer is always flushed before exit.
+| `src/main.rs:88-92` (Drop impl)
+| Last ~16KB of log lost on crash.
+|===
+
+== Dependencies
+
+* **Internal**: list other hyperpolymath repos this depends on.
+* **External**: SHA-pinned (see `Cargo.lock` / `deno.lock` / etc.).
+* **Build-time**: tools required to build (just, deno, cargo, …).
+
+== Out of scope
+
+Explicit non-goals. Things we deliberately do *not* do, with a one-line
+reason for each. This section saves more time than the rest combined.
+
+== See also
+
+* link:./usage.adoc[Usage] — consumer perspective.
+* link:./contributing.adoc[Contributing] — developer setup.
+* link:./decisions/[ADRs] — historical record of why this shape.

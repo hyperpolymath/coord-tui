@@ -1,0 +1,53 @@
+// SPDX-License-Identifier: MPL-2.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell (hyperpolymath) <6759885+hyperpolymath@users.noreply.github.com>
+= ADR-0001 — Use Architecture Decision Records
+:revdate: 2026-MM-DD
+:status: ACCEPTED
+
+== Context
+
+We need a lightweight way to record significant architectural decisions
+and the reasoning behind them, so future maintainers (and AI agents)
+can understand *why* the project is shaped as it is.
+
+== Decision
+
+Adopt link:https://adr.github.io/[Architecture Decision Records (ADRs)]
+in `docs/decisions/`, numbered sequentially (0001, 0002, ...).
+
+* Each ADR is a single `.adoc` file.
+* The first ADR (this one) records the decision to use ADRs.
+* Status values: PROPOSED, ACCEPTED, DEPRECATED, SUPERSEDED.
+* When a decision is overturned, the new ADR records the supersession
+  and updates the old one's status to `SUPERSEDED by 00NN`.
+
+== Consequences
+
+. **Positive**: future readers see *why* without git-archaeology.
+. **Positive**: design alternatives are documented, not just the
+  winning choice.
+. **Positive**: ADRs are reviewable in PRs — the design discussion
+  happens alongside the code that implements it.
+. **Negative**: maintenance burden — every non-obvious decision now
+  warrants an ADR. (We mitigate by keeping ADRs short; "non-obvious"
+  is a judgment call.)
+. **Negative**: ADRs can rot. We accept this; the SUPERSEDED chain
+  is the recovery mechanism.
+
+== Alternatives considered
+
+. **Comments in code** — too local; doesn't capture cross-cutting
+  decisions.
+. **Wiki / external doc** — drifts from code; not in PR review.
+. **Commit messages** — too transient and not discoverable.
+. **No record** — discarded; this is how every project ends up with
+  "I don't know why we do it this way" debt.
+
+== Companion ADRs
+
+* (None yet — this is the first ADR.)
+
+== References
+
+* MADR template — `https://adr.github.io/madr/`
+* Estate convention — `hyperpolymath/standards/docs/RSR_OUTLINE.adoc`

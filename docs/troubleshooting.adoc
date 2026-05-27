@@ -1,0 +1,57 @@
+// SPDX-License-Identifier: MPL-2.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell (hyperpolymath) <6759885+hyperpolymath@users.noreply.github.com>
+= Troubleshooting — coord-tui
+:revdate: 2026-MM-DD
+
+This file is a *living FAQ* — known failure modes and recovery paths.
+Add a new entry every time you debug something that took more than 15
+minutes; future-you (and other maintainers) will thank you.
+
+== Known failure modes
+
+=== `<error message or symptom>`
+
+**Symptom**: short reproduction. What does the user see?
+
+**Cause**: root cause (one or two sentences).
+
+**Fix**:
+[source,bash]
+----
+<the actual commands to recover>
+----
+
+**Avoidance**: how to not hit this again (config setting, doc link, etc.).
+
+---
+
+=== `<another failure mode>`
+
+(Replace this and the above example with real entries as you encounter
+them.)
+
+== Diagnostic toolkit
+
+When something is wrong, run these first:
+
+[source,bash]
+----
+just doctor          # runs all available self-checks
+just version         # prints the version & build hash
+just log-tail        # last N lines of logs
+----
+
+== When to escalate
+
+. Filed an issue with: version, OS, exact command, full error output,
+  and the symptom in plain English.
+. Linked from the issue: the relevant ADR(s) and any related issues.
+. For *security*-relevant findings, see
+  link:./../SECURITY.md[SECURITY.md] — do **not** file public issues.
+
+== Where to look for more help
+
+* `docs/architecture.adoc` — internals.
+* `docs/decisions/` — historical record of why things are this shape.
+* `https://github.com/hyperpolymath/coord-tui/issues?q=is%3Aissue+<your symptom>` — has anyone hit this before?
+* `https://github.com/hyperpolymath/standards/issues` — for estate-wide problems.

@@ -62,7 +62,7 @@ together rather than fight over the same files.
 
 == Where does it live in the repo?
 
-```
+----
 boj-server/
 └── coord-tui/
     ├── Cargo.toml
@@ -71,4 +71,4 @@ boj-server/
     │   └── coord-hooks.sh  # source from .bashrc / .zshrc
     └── src/
         └── main.rs
-```
+----

@@ -3,7 +3,6 @@
 # See standards#191 for the reusable's purpose and design.
 
 name: Hypatia Security Scan
-
 on:
   push:
     branches: [main, master, develop]
@@ -12,17 +11,14 @@ on:
   schedule:
     - cron: '0 0 * * 0'
   workflow_dispatch:
-
 # Estate guardrail: cancel superseded runs so re-pushes don't pile up.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
-
 permissions:
   contents: read
   security-events: write
   pull-requests: write
-
 jobs:
   hypatia:
     uses: hyperpolymath/standards/.github/workflows/hypatia-scan-reusable.yml@6cd3772824e59c8c9affeab66061e25383544242

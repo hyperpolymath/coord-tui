@@ -1,0 +1,217 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= coord-tui
+image:https://img.shields.io/badge/OpenSSF-Best_Practices-green?logo=openssourcesecurity[OpenSSF Best Practices,link="https://www.bestpractices.dev/en/projects/new?repo_url=https://github.com/hyperpolymath/coord-tui"]
+
+:toc:
+:toc-placement: preamble
+:icons: font
+
+Terminal UI for BoJ `local-coord-mcp` — gives every AI tool window a peer
+ID in its title bar and lets you monitor and coordinate between instances in
+real time.
+
+== Quick start
+
+[source,bash]
+----
+bash /path/to/boj-server/coord-tui/install.sh
+----
+
+One command does everything: builds the Zig coord adapter, builds this Rust
+binary, installs both to `~/.local/bin/`, starts the adapter as a systemd
+user service, and patches `~/.bashrc`/`~/.zshrc` with the shell hooks.
+Open a new shell and you are done.
+
+== Interactive TUI
+
+[source,bash]
+----
+coord-tui
+----
+
+=== Layout
+
+The TUI opens with three panes:
+
+[cols="1,3"]
+|===
+|Pane |Contents
+
+|*Peers* (top-left)
+|Every registered peer — ID, tool kind, state, context, and current status.
+Your own peer is marked with `◀`.
+
+|*Claims* (bottom-left)
+|Every active task claim and the peer holding it.
+Your own claims are marked `◀ yours`.
+
+|*Commands sidebar* (right)
+|TUI key reference, shell helpers, `just coord-*` recipes, and registration
+examples. Open by default; `\` collapses it. Auto-hides on terminals narrower
+than 80 columns.
+|===
+
+=== Keys
+
+[cols="1,3"]
+|===
+|Key |Action
+
+|`c` |Claim a task — prompts for a task name. First caller wins (mutex).
+|`s` |Set your status text — visible to all peers.
+|`p` |Send a heartbeat on the selected claim (keep-alive / progress signal).
+|`R` |Force a refresh now (auto-refresh runs every 5 s when registered).
+|`Tab` |Switch keyboard focus between Peers and Claims panels.
+|`j` / `↓` |Move selection down.
+|`k` / `↑` |Move selection up.
+|`\` |Toggle the Commands sidebar open/closed.
+|`?` |Open the full help overlay (keys, shell helpers, session info).
+|`q` / `Ctrl+C` |Quit.
+|===
+
+=== Commands sidebar
+
+Visible on the right of the work panels whenever the terminal is wide
+enough (≥ 80 columns). Contains four collapsible sections:
+
+* *TUI keys* — every key binding at a glance.
+* *Shell helpers* — `coord-peers`, `coord-claims`, `coord-claim`, `coord-status`,
+  `coord-whoami`.
+* *just coord-\** — `just coord`, `just coord-peers`, `just coord-claims`,
+  `just coord-claim`, `just coord-status`, `just coord-health`.
+* *Register* — how to register a new window manually or via hooks.
+
+Press `\` to hide it when you need the space. Press `\` again to bring it
+back. The footer shows `[\]hide` when the sidebar is visible and `[\]cmd`
+when it is hidden.
+
+== Shell helpers
+
+After install, `coord-hooks.sh` is sourced automatically. These commands
+work in any terminal without opening the TUI:
+
+[cols="1,3"]
+|===
+|Command |What it does
+
+|`coord-peers`
+|Print all active peers with their kind and status.
+
+|`coord-claims`
+|Print all active task claims and who holds them.
+
+|`coord-claim <task>`
+|Claim a task by name from the command line.
+
+|`coord-status <text>`
+|Set your status message from the command line.
+
+|`coord-whoami`
+|Show your current peer ID and token (truncated).
+|===
+
+The hooks also wrap the tool launchers so registration happens
+automatically:
+
+[source,bash]
+----
+claude   # registers this shell, sets window title to "claude [peer-abc]"
+gemini   # same for Gemini
+cursor   # same for Cursor
+codex    # same for OpenAI Codex
+vibe     # same for Vibe IDE
+----
+
+== just recipes
+
+If `boj-server` is your working directory, `just` gives you the same
+operations without sourcing any hooks:
+
+[cols="1,3"]
+|===
+|Recipe |What it does
+
+|`just coord` |Open the interactive TUI.
+|`just coord-register [kind]` |Register this terminal as `kind` (default: `claude`).
+|`just coord-peers` |List active peers.
+|`just coord-claims` |List active task claims.
+|`just coord-claim <task>` |Claim a task.
+|`just coord-status <text>` |Set your status.
+|`just coord-whoami` |Show peer ID and token.
+|`just coord-health` |Check adapter liveness and stats.
+|`just coord-build` |Rebuild the Rust binary.
+|`just coord-install` |Full install (binary + hooks + service).
+|`just coord-hooks` |Update shell hooks only.
+|===
+
+== Silent registration (used by shell hooks)
+
+[source,bash]
+----
+coord-tui --id --kind claude
+coord-tui --id --kind gemini --context my-project
+coord-tui --id --kind vibe   --context vibe
+----
+
+Registers, writes `~/.cache/coord-tui/peer.env`, sets the terminal window
+title to the peer ID, prints it to stdout, and exits immediately. The shell
+hooks call this before launching the real tool so the window title is set
+before you see the tool's output.
+
+The env file contains:
+
+----
+BOJ_COORD_PEER_ID=<peer_id>
+BOJ_COORD_TOKEN=<token>
+----
+
+== Multi-instance coordination workflow
+
+1. Open several terminal windows.
+2. Run `claude` (or `gemini`, `cursor`, `codex`, `vibe`) in each — each
+   gets a unique peer ID visible in the title bar.
+3. In one window, run `coord-tui` to monitor the full session.
+4. Peers claim tasks with `c` in the TUI or `coord-claim <task>` at the
+   shell. The claim is a mutex — the first caller gets it; subsequent
+   callers see who holds it.
+5. Each peer sends periodic heartbeats (`p` in the TUI or via the MCP
+   `coord_progress` tool) to signal continued progress.
+6. When a peer finishes or crashes, its claim is released and becomes
+   available again.
+
+== Environment variables
+
+[cols="1,1,3"]
+|===
+|Variable |Default |Purpose
+
+|`BOJ_COORD_CONTEXT` |git repo name |Context label sent to the registry.
+|`BOJ_COORD_KIND` |`claude` |Client kind (`claude` / `gemini` / `custom` / `openai`).
+|`COORD_BACKEND_URL` |`http://127.0.0.1:7745` |Adapter base URL.
+|===
+
+== Requirements
+
+* Rust (stable) — to build coord-tui
+* Zig — to build the coord adapter
+* systemd (optional but recommended) — automatic adapter lifecycle
+* `~/.local/bin` on `$PATH`
+* `just` (optional) — for the `just coord-*` recipe shorthand
+
+== Architecture
+
+`coord-tui` is a thin Rust client over the `local-coord-mcp` HTTP adapter.
+The adapter (`cartridges/local-coord-mcp/adapter/`) provides the
+loopback-only HTTP surface; the Idris2 `IsLoopback` proof in
+`cartridges/local-coord-mcp/abi/LocalCoord/SafeLocalCoord.idr` guarantees
+at compile time that it cannot bind to any non-loopback address.
+
+The TUI's pure state-transition functions (`next_index`, `prev_index`,
+`clamp_selection`) are deliberately isolated from I/O to support future
+SPARK/Ada formal verification via the Idris2-ABI + Zig-FFI pattern used
+throughout `boj-server`.
+
+`coord-tui` itself lives in its own repository at
+https://github.com/hyperpolymath/coord-tui and is included in
+`boj-server` as a first-class companion tool.

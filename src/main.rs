@@ -62,13 +62,26 @@ fn post(base: &str, tool: &str, body: &Value) -> Result<Value, String> {
     let endpoint = format!("{}/tools/{}", base, tool);
     let body_str = serde_json::to_string(body).unwrap_or_default();
 
+    // ureq 3.x: `.set()` -> `.header()`, and `.send_string()` -> `.send()`.
+    // ureq 3.x also turns 4xx/5xx into `Error::StatusCode` by default, which
+    // (unlike 2.x's `Error::Status`) carries no response body. Disable that
+    // so error responses still come back as `Ok` and we can read their JSON
+    // body, matching the original 2.x fallback behaviour below.
     let raw = match ureq::post(&endpoint)
-        .set("Content-Type", "application/json")
-        .send_string(&body_str)
+        .header("Content-Type", "application/json")
+        .config()
+        .http_status_as_error(false)
+        .build()
+        .send(&body_str)
     {
-        Ok(resp) => resp.into_string().map_err(|e| format!("read: {}", e))?,
-        Err(ureq::Error::Status(_, resp)) => {
-            resp.into_string().unwrap_or_else(|_| r#"{"success":false}"#.to_owned())
+        Ok(mut resp) => {
+            let is_error_status = !resp.status().is_success();
+            let read = resp.body_mut().read_to_string();
+            if is_error_status {
+                read.unwrap_or_else(|_| r#"{"success":false}"#.to_owned())
+            } else {
+                read.map_err(|e| format!("read: {}", e))?
+            }
         }
         Err(e) => return Err(format!("network: {}", e)),
     };

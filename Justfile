@@ -88,7 +88,7 @@ build *args:
     #   cargo build {{args}}                    # Rust
     #   mix compile {{args}}                    # Elixir
     #   zig build {{args}}                      # Zig
-    #   deno task build {{args}}                # Deno/ReScript
+    #   deno task build {{args}}                # Deno/AffineScript
     @echo "Build complete"
 
 # Build in release mode with optimizations
@@ -559,7 +559,7 @@ state-phase:
     @grep -oP 'phase\s*=\s*"\K[^"]+' .machine_readable/STATE.a2ml 2>/dev/null | head -1 || echo "unknown"
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# GUIX & NIX
+# GUIX & GUIX
 # ═══════════════════════════════════════════════════════════════════════════════
 
 # Enter Guix development shell (primary)
@@ -570,9 +570,9 @@ guix-shell:
 guix-build:
     guix build -f guix.scm
 
-# Enter Nix development shell (fallback)
-nix-shell:
-    @if [ -f "flake.nix" ]; then nix develop; else echo "No flake.nix"; fi
+# Enter Guix development shell (fallback)
+guix-shell:
+    @if [ -f "flake.guix" ]; then guix develop; else echo "No flake.guix"; fi
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # HYBRID AUTOMATION

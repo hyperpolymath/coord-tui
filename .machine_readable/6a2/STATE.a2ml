@@ -32,7 +32,7 @@ milestones = [
   { name = "Phase 1e: Trustfile / contractiles", completion = 100 },
   { name = "Phase 2: Container ecosystem templates (stapeln)", completion = 100 },
   { name = "Phase 3: Multi-forge sync hardening", completion = 0 },
-  { name = "Phase 4: Nix/Guix reproducible shells", completion = 50 },
+  { name = "Phase 4: Guix/Guix reproducible shells", completion = 50 },
 ]
 
 [blockers-and-issues]
@@ -43,7 +43,7 @@ actions = [
   "Container templates complete — test with `just container-init`",
   "Validate container templates across wolfi-base and static Chainguard images",
   "Harden multi-forge sync for GitLab/Bitbucket mirroring edge cases",
-  "Expand Nix/Guix development shell templates",
+  "Expand Guix/Guix development shell templates",
 ]
 
 [maintenance-status]

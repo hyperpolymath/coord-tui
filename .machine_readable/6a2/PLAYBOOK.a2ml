@@ -63,7 +63,7 @@ enforcement-workflow = ".github/workflows/estate-rules.yml"
 # .github/             CONTRIBUTING.md, CODE_OF_CONDUCT.md, SECURITY.md, workflows/
 # .machine_readable/   AI manifests (0.1-AI-MANIFEST.a2ml), 6a2/ checkpoints,
 #                      contractiles/, configs/, anchors/, policies/, scripts/, svc/
-# build/               contractile.just, flake.nix, guix.scm, Containerfile,
+# build/               contractile.just, flake.guix, guix.scm, Containerfile,
 #                      just/*.just (Justfile section imports)
 # docs/                onboarding/, status/, architecture/, governance/  (all .adoc)
 # session/             dispatch.sh, custom-checks.k9, local-hooks.sh
@@ -103,7 +103,7 @@ enforcement-workflow = ".github/workflows/estate-rules.yml"
 #   build/just/groove.just     Groove protocol setup (after zig removed)
 #
 # Daily-use recipes (BUILD, TEST, LINT, RUN, DEPS, DOCS, CONTAINER, CI,
-# SECURITY, STATE, GUIX/NIX, MATRIX, VERSION CONTROL, UTILITIES, SESSION)
+# SECURITY, STATE, GUIX/GUIX, MATRIX, VERSION CONTROL, UTILITIES, SESSION)
 # stay in the root Justfile where users expect to find them.
 
 # === 5-PR cleanup pattern ===

@@ -18,11 +18,11 @@ one to any new file.
 A pinned dev shell is provided:
 
 ```sh
-nix develop        # toolchain: just cargo rustc rustfmt clippy
+guix develop        # toolchain: just cargo rustc rustfmt clippy
 ```
 
-Estate policy is Guix primary / Nix fallback; this repo currently ships the
-Nix fallback. A `guix.scm` is welcome if you prefer the primary tier.
+Estate policy is Guix primary / Guix fallback; this repo currently ships the
+Guix fallback. A `guix.scm` is welcome if you prefer the primary tier.
 
 ## Build and test
 
@@ -49,7 +49,7 @@ validates them.
 ## Language policy
 
 The estate restricts which languages may be used. In particular Python, Go,
-TypeScript, ReScript, V-lang, Java/Kotlin, Swift and Makefiles are **not**
+TypeScript, AffineScript, V-lang, Java/Kotlin, Swift and Makefiles are **not**
 accepted in new code; AffineScript, Rust/SPARK, Zig, Deno, Gleam, Elixir,
 Haskell, Idris2, Agda, Julia and OCaml are. CI enforces this, so check the
 policy in `hyperpolymath/standards` before introducing a new language.

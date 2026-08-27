@@ -8,6 +8,8 @@ workflows:
         - 'github/codeql-action@v4.37.9'
     '.github/workflows/governance.yml': []
     '.github/workflows/hypatia-scan.yml': []
+    '.github/workflows/label-triage.yml': []
+    '.github/workflows/labels.yml': []
     '.github/workflows/push-email-notify.yml':
         - 'dawidd6/action-send-mail@v3.12.0'
     '.github/workflows/secret-scanner.yml': []

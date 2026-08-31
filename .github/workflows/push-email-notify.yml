@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Send push notification email
-        uses: dawidd6/action-send-mail@v18
+        uses: dawidd6/action-send-mail@94de994a9f6fffee200243214e17002e2920bb59 # v18
         with:
           server_address: ${{ secrets.SMTP_HOST }}
           server_port: ${{ secrets.SMTP_PORT }}
@@ -26,7 +26,7 @@ jobs:
           username: ${{ secrets.SMTP_USER }}
           password: ${{ secrets.SMTP_PASS }}
           from: "GitHub Push <${{ secrets.SMTP_USER }}>"
-          to: "jonathan.jewell@gmail.com j.d.a.jewell@open.ac.uk"
+          to: "jonathan.jewell@gmail.com, j.d.a.jewell@open.ac.uk"
           subject: "[${{ github.repository }}] push to ${{ github.ref_name }} by ${{ github.actor }}"
           body: |
             Repository: ${{ github.repository }}

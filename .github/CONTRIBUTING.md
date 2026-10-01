@@ -19,7 +19,7 @@ Prerequisites — the minimum versions and where to get them:
 
 - `<tool` `2>` v\`\<version\>\` — `<install` `instruction>`.
 
-- GPG signing key configured (estate policy — all commits must be
+- SSH signing key configured (estate policy — all commits must be
   signed). See
   [standards/docs/secure-coding-training.md](https://github.com/hyperpolymath/standards/blob/main/docs/secure-coding-training.md).
 
@@ -55,7 +55,7 @@ just fmt         # auto-format
 just lint        # static checks
 ```
 
-- All commits must be **GPG-signed** (CI enforces; see
+- All commits must be **signed**, with SSH for people (CI enforces; see
   [standards](https://github.com/hyperpolymath/standards)).
 
 - All source files must carry an **SPDX-License-Identifier** header (CI
@@ -107,3 +107,20 @@ When you make a non-obvious design decision, write it down:
 
 - Estate-wide concerns (policy, conventions, CI): file at
   `hyperpolymath/standards/issues`.
+
+## Signed commits
+
+Every commit that reaches the default branch must be signed; a ruleset refuses
+unsigned pushes. Estate policy:
+[SIGNING-POLICY](https://github.com/hyperpolymath/standards/blob/main/docs/SIGNING-POLICY.adoc).
+
+- **People and interactive agents** sign with an SSH key registered on GitHub
+  as a *signing* key (`gpg.format=ssh`, `user.signingkey=<key>.pub`,
+  `commit.gpgsign=true`). The committer email must be verified on that account.
+- **Apps, bots and workflows** never `git push` local commits. They write
+  through the API (`createCommitOnBranch` or the estate `signed-push` action)
+  so that GitHub signs each commit.
+- Merge PRs with **squash**. The ruleset checks every commit on the PR branch,
+  not just the result, so one unsigned commit blocks the merge. Re-create such a
+  branch with signed commits (`git cherry-pick -S`) and open a new PR.
+  Rebase-merge replays commits unsigned and is disabled.
